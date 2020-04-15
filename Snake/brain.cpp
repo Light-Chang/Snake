@@ -118,63 +118,65 @@ void change_direction()
 	direction dir = D;
 	char inputch;
 
-	inputch = _getch();
-
-	// 根据键盘输入 w，s，a，d 设置dir变量的值
-	switch (inputch)
+	// 敲击键盘才执行以下语句
+	if ( _kbhit() )
 	{
-	case 'a':
-		dir = L;
-		break;
-	case 'A':
-		dir = L;
-		break;
-	case 'd':
-		dir = R;
-		break;
-	case 'D':
-		dir = R;
-		break;
-	case 'w':
-		dir = T;
-		break;
-	case 'W':
-		dir = T;
-		break;
-	case 's':
-		dir = B;
-		break;
-	case 'S':
-		dir = B;
-		break;
-	default:
-		break;
-	}
+		inputch = _getch();
 
-	// 输入相反方向不做操作
-	if (!check_direction(dir))
-	{
-		return;
-	}
-	
+		// 根据键盘输入 w，s，a，d 设置dir变量的值
+		switch (inputch)
+		{
+		case 'a':
+			dir = L;
+			break;
+		case 'A':
+			dir = L;
+			break;
+		case 'd':
+			dir = R;
+			break;
+		case 'D':
+			dir = R;
+			break;
+		case 'w':
+			dir = T;
+			break;
+		case 'W':
+			dir = T;
+			break;
+		case 's':
+			dir = B;
+			break;
+		case 'S':
+			dir = B;
+			break;
+		default:
+			break;
+		}
 
-	// 蛇移动：设置方向，移动，看是否得分，看游戏是否结束
-	if (!(D == dir))
-	{
-		set_dir(dir);
-		move_snake();
-		check_score();
-		check_end();
-
-		if ( end )
+		// 输入相反方向不做操作
+		if (!check_direction(dir))
 		{
 			return;
 		}
 
-		redraw();
-	}
 
-	return;
+		// 蛇移动：设置方向，移动，看是否得分，看游戏是否结束
+		if (!(D == dir))
+		{
+			set_dir(dir);
+			move_snake();
+			check_score();
+			check_end();
+
+			if (end)
+			{
+				return;
+			}
+
+			redraw();
+		}
+	}
 }
 
 /*
@@ -206,12 +208,22 @@ void play()
 		// 执行游戏
 		while (1)
 		{
+			// 改变蛇头方向
 			change_direction();
 
+			// 没结束蛇自动向前移动
+			Sleep(250);
+			move_snake();
+			check_score();
+			check_end();
+			
+			// 判断是否结束游戏
 			if (end)
 			{
 				break;
 			}
+
+			redraw();
 		}
 
 		// 游戏结束
